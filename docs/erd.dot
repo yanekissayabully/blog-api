@@ -1,0 +1,78 @@
+digraph ERD {
+  rankdir=LR;
+  graph [fontname="Helvetica", splines=ortho, nodesep=0.7, ranksep=1.1];
+  node [shape=plain, fontname="Helvetica"];
+  edge [fontname="Helvetica", fontsize=10, color="#555555"];
+
+  User [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#2c3e50"><font color="white"><b>User</b></font></td></tr>
+      <tr><td align="left">id (PK)</td></tr>
+      <tr><td align="left">email (unique)</td></tr>
+      <tr><td align="left">first_name</td></tr>
+      <tr><td align="left">last_name</td></tr>
+      <tr><td align="left">is_active</td></tr>
+      <tr><td align="left">is_staff</td></tr>
+      <tr><td align="left">password</td></tr>
+    </table>
+  >];
+
+  Category [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#2980b9"><font color="white"><b>Category</b></font></td></tr>
+      <tr><td align="left">id (PK)</td></tr>
+      <tr><td align="left">name (unique)</td></tr>
+      <tr><td align="left">slug (unique)</td></tr>
+    </table>
+  >];
+
+  Tag [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#2980b9"><font color="white"><b>Tag</b></font></td></tr>
+      <tr><td align="left">id (PK)</td></tr>
+      <tr><td align="left">name (unique)</td></tr>
+      <tr><td align="left">slug (unique)</td></tr>
+    </table>
+  >];
+
+  Post [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#27ae60"><font color="white"><b>Post</b></font></td></tr>
+      <tr><td align="left">id (PK)</td></tr>
+      <tr><td align="left">author_id (FK -&gt; User)</td></tr>
+      <tr><td align="left">title</td></tr>
+      <tr><td align="left">slug (unique)</td></tr>
+      <tr><td align="left">body</td></tr>
+      <tr><td align="left">category_id (FK -&gt; Category, null)</td></tr>
+      <tr><td align="left">status (draft/published)</td></tr>
+      <tr><td align="left">created_at</td></tr>
+      <tr><td align="left">updated_at</td></tr>
+    </table>
+  >];
+
+  Comment [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#8e44ad"><font color="white"><b>Comment</b></font></td></tr>
+      <tr><td align="left">id (PK)</td></tr>
+      <tr><td align="left">post_id (FK -&gt; Post)</td></tr>
+      <tr><td align="left">author_id (FK -&gt; User)</td></tr>
+      <tr><td align="left">body</td></tr>
+      <tr><td align="left">created_at</td></tr>
+    </table>
+  >];
+
+  PostTag [label=<
+    <table border="1" cellborder="0" cellspacing="0" cellpadding="6">
+      <tr><td bgcolor="#7f8c8d"><font color="white"><b>Post_Tag</b></font></td></tr>
+      <tr><td align="left">post_id (FK -&gt; Post)</td></tr>
+      <tr><td align="left">tag_id (FK -&gt; Tag)</td></tr>
+    </table>
+  >];
+
+  User -> Post [label="1  ..  *  (author)"];
+  User -> Comment [label="1  ..  *  (author)"];
+  Category -> Post [label="1  ..  *  (nullable)"];
+  Post -> Comment [label="1  ..  *"];
+  Post -> PostTag [label="1  ..  *"];
+  Tag -> PostTag [label="1  ..  *"];
+}
