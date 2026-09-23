@@ -78,13 +78,12 @@ Send the access token as `Authorization: Bearer <token>`.
 | GET                | `categories/`, `tags/`                | List                          |
 | POST               | `categories/`, `tags/`                | Create (authenticated)        |
 | GET/PUT/PATCH/DEL  | `categories/<slug>/`, `tags/<slug>/`  | Retrieve/update/delete        |
-| GET                | `posts/`                              | List posts                    |
+| GET                | `posts/`                              | List posts (with comments)    |
 | POST               | `posts/`                              | Create a post (authenticated) |
-| GET                | `posts/<slug>/`                       | Retrieve a post with comments |
-| PUT/PATCH/DELETE   | `posts/<slug>/`                       | Update/delete (author only)   |
-| GET                | `posts/<post_pk>/comments/`           | List comments on a post       |
-| POST               | `posts/<post_pk>/comments/`           | Add a comment (authenticated) |
-| PUT/PATCH/DELETE   | `posts/<post_pk>/comments/<pk>/`      | Update/delete (author only)   |
+| GET/PUT/PATCH/DEL  | `posts/<slug>/`                       | Retrieve/update/delete (author only for write) |
+| GET                | `comments/`, `comments/?post=<id>`    | List comments                 |
+| POST               | `comments/`                           | Add a comment (authenticated), body includes `post` |
+| GET/PUT/PATCH/DEL  | `comments/<id>/`                      | Retrieve/update/delete (author only for write) |
 
 Write access to posts/comments is restricted to the resource's author; everyone else has
 read-only access.

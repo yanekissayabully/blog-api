@@ -5,13 +5,7 @@ from django.db.models import QuerySet
 
 from apps.blog.models import Category, Comment, Post, Tag
 from apps.blog.permissions import IsAuthorOrReadOnly
-from apps.blog.serializers import (
-    CategorySerializer,
-    CommentSerializer,
-    PostDetailSerializer,
-    PostListSerializer,
-    TagSerializer,
-)
+from apps.blog.serializers import CategorySerializer, CommentSerializer, PostSerializer, TagSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -29,14 +23,10 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.select_related('author', 'category').prefetch_related('tags', 'comments')
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     lookup_field = 'slug'
-
-    def get_serializer_class(self) -> type[BaseSerializer]:
-        if self.action == 'list':
-            return PostListSerializer
-        return PostDetailSerializer
 
     def perform_create(self, serializer: BaseSerializer) -> None:
         serializer.save(author=self.request.user)
@@ -47,7 +37,11 @@ class CommentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
 
     def get_queryset(self) -> QuerySet[Comment]:
-        return Comment.objects.filter(post_id=self.kwargs['post_pk']).select_related('author')
+        queryset = Comment.objects.all()
+        post_id = self.request.query_params.get('post')
+        if post_id:
+            queryset = queryset.filter(post_id=post_id)
+        return queryset
 
     def perform_create(self, serializer: BaseSerializer) -> None:
-        serializer.save(author=self.request.user, post_id=self.kwargs['post_pk'])
+        serializer.save(author=self.request.user)

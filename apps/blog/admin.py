@@ -23,11 +23,9 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ['status', 'category', 'tags']
     search_fields = ['title', 'body']
     prepopulated_fields = {'slug': ('title',)}
-    autocomplete_fields = ['author', 'category']
 
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['post', 'author', 'created_at']
     search_fields = ['body']
-    autocomplete_fields = ['post', 'author']
